@@ -48,16 +48,72 @@ function dramaMoviesScore(moviesArray) {
   return +dramaAvg.toFixed(2);
 }
 
-console.log(dramaMoviesScore(movies));
-
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
-function orderByYear(moviesArray) {}
+function orderByYear(moviesArray) {
+  const moviesByYear = [...moviesArray];
+
+  moviesByYear.sort((a, b) => {
+    if (a.year === b.year) {
+      return ("" + a.title).localeCompare(b.title);
+    } else {
+      return a.year - b.year;
+    }
+  });
+
+  return moviesByYear;
+}
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
-function orderAlphabetically(moviesArray) {}
+function orderAlphabetically(moviesArray) {
+  let moviesByTitle = [...moviesArray];
+
+  moviesByTitle.sort((a, b) => ("" + a.title).localeCompare(b.title));
+
+  // PQ NAO POSSO FAZER TUDO ISSO EM UMA LINHA ???
+
+  moviesByTitle = moviesByTitle.slice(0, 20).map((element) => {
+    return element.title;
+  });
+
+  return moviesByTitle;
+}
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-function turnHoursToMinutes(moviesArray) {}
+function turnHoursToMinutes(moviesArray) {
+  let auxMovies = [...moviesArray];
+
+  let minutes = auxMovies.map((element) => {
+    if (
+      !isNaN(+element.duration.charAt(3)) &&
+      !isNaN(+element.duration.charAt(4))
+    ) {
+      return (
+        +element.duration.charAt(0) * 60 +
+        +element.duration.charAt(3) * 10 +
+        +element.duration.charAt(4)
+      );
+    } else if (
+      !isNaN(+element.duration.charAt(3)) &&
+      isNaN(+element.duration.charAt(4))
+    ) {
+      return +element.duration.charAt(0) * 60 + +element.duration.charAt(3);
+    } else {
+      return +element.duration.charAt(0) * 60;
+    }
+  });
+
+  minutes.forEach((element, index) => {
+    auxMovies[index].duration = element;
+  });
+
+  return auxMovies;
+}
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {}
+function bestYearAvg(moviesArray) {
+  if (!moviesArray.length) {
+    return null;
+  }
+
+  return `The best year was ${year} with an average score of ${yearRate}`;
+}
