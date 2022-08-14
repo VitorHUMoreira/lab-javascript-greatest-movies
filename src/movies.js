@@ -115,5 +115,81 @@ function bestYearAvg(moviesArray) {
     return null;
   }
 
-  return `The best year was ${year} with an average score of ${yearRate}`;
+  let yearAvg = [...moviesArray];
+
+  yearAvg.sort((a, b) => a.year - b.year);
+
+  let yearAndRate = { year: 0, rate: 0 };
+
+  yearAvg.forEach((element, i) => {
+    if (yearAvg[i + 1] !== undefined && element.year === yearAvg[i + 1].year) {
+      if (yearAndRate.rate < (element.score + yearAvg[i + 1].score) / 2) {
+        yearAndRate.year = element.year;
+        yearAndRate.rate = (element.score + yearAvg[i + 1].score) / 2;
+      }
+      if (
+        yearAvg[i + 2] !== undefined &&
+        element.year === yearAvg[i + 2].year
+      ) {
+        if (
+          yearAndRate.rate <
+          (element.score + yearAvg[i + 1].score + yearAvg[i + 2].score) / 3
+        ) {
+          yearAndRate.year = element.year;
+          yearAndRate.rate =
+            (element.score + yearAvg[i + 1].score + yearAvg[i + 2].score) / 3;
+        }
+        if (
+          yearAvg[i + 3] !== undefined &&
+          element.year === yearAvg[i + 3].year
+        ) {
+          if (
+            yearAndRate.rate <
+            (element.score +
+              yearAvg[i + 1].score +
+              yearAvg[i + 2].score +
+              yearAvg[i + 3].score) /
+              4
+          ) {
+            yearAndRate.year = element.year;
+            yearAndRate.rate =
+              (element.score +
+                yearAvg[i + 1].score +
+                yearAvg[i + 2].score +
+                yearAvg[i + 3].score) /
+              4;
+          }
+          if (
+            yearAvg[i + 4] !== undefined &&
+            element.year === yearAvg[i + 4].year
+          ) {
+            if (
+              yearAndRate.rate <
+              (element.score +
+                yearAvg[i + 1].score +
+                yearAvg[i + 2].score +
+                yearAvg[i + 3].score +
+                yearAvg[i + 4].score) /
+                5
+            ) {
+              yearAndRate.year = element.year;
+              yearAndRate.rate =
+                (element.score +
+                  yearAvg[i + 1].score +
+                  yearAvg[i + 2].score +
+                  yearAvg[i + 3].score +
+                  yearAvg[i + 4].score) /
+                5;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return `The best year was ${
+    yearAndRate.year
+  } with an average score of ${+yearAndRate.rate.toFixed(2)}`;
 }
+
+console.log(bestYearAvg(movies));
