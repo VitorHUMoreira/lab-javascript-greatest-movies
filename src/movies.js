@@ -80,7 +80,10 @@ function orderAlphabetically(moviesArray) {
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
 function turnHoursToMinutes(moviesArray) {
-  let auxMovies = [...moviesArray];
+  let auxMovies = JSON.parse(JSON.stringify(moviesArray));
+
+  // let auxMovies = [...moviesArray];
+  // TIVE QUE USAR PARSE E STRINGFY POIS COMO O METODO ACIMA COPIA O ARRAY POR REFERENCIA, QUANDO EU ADD OUTRAS COISAS NELE ELE ADICIONAVA NA ARRAY ORIGINAL
 
   let minutes = auxMovies.map((element) => {
     if (
@@ -109,6 +112,9 @@ function turnHoursToMinutes(moviesArray) {
   return auxMovies;
 }
 
+console.log(movies);
+console.log(turnHoursToMinutes(movies));
+
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
 function bestYearAvg(moviesArray) {
   if (!moviesArray.length) {
@@ -117,72 +123,89 @@ function bestYearAvg(moviesArray) {
 
   let yearAvg = [...moviesArray];
 
-  yearAvg.sort((a, b) => a.year - b.year);
+  yearAvg.sort((a, b) => {
+    if (a.year === b.year) {
+      return b.score - a.score;
+    } else {
+      return a.year - b.year;
+    }
+  });
 
   let yearAndRate = { year: 0, rate: 0 };
 
   yearAvg.forEach((element, i) => {
-    if (yearAvg[i + 1] !== undefined && element.year === yearAvg[i + 1].year) {
-      if (yearAndRate.rate < (element.score + yearAvg[i + 1].score) / 2) {
-        yearAndRate.year = element.year;
-        yearAndRate.rate = (element.score + yearAvg[i + 1].score) / 2;
-      }
+    if (yearAvg.length === 1) {
+      yearAndRate.year = element.year;
+      yearAndRate.rate = element.score;
+    } else {
       if (
-        yearAvg[i + 2] !== undefined &&
-        element.year === yearAvg[i + 2].year
+        yearAvg[i + 1] !== undefined &&
+        element.year === yearAvg[i + 1].year
       ) {
         if (
-          yearAndRate.rate <
-          (element.score + yearAvg[i + 1].score + yearAvg[i + 2].score) / 3
-        ) {
-          yearAndRate.year = element.year;
-          yearAndRate.rate =
-            (element.score + yearAvg[i + 1].score + yearAvg[i + 2].score) / 3;
-        }
-        if (
-          yearAvg[i + 3] !== undefined &&
-          element.year === yearAvg[i + 3].year
+          yearAvg[i + 2] !== undefined &&
+          element.year === yearAvg[i + 2].year
         ) {
           if (
-            yearAndRate.rate <
-            (element.score +
-              yearAvg[i + 1].score +
-              yearAvg[i + 2].score +
-              yearAvg[i + 3].score) /
-              4
-          ) {
-            yearAndRate.year = element.year;
-            yearAndRate.rate =
-              (element.score +
-                yearAvg[i + 1].score +
-                yearAvg[i + 2].score +
-                yearAvg[i + 3].score) /
-              4;
-          }
-          if (
-            yearAvg[i + 4] !== undefined &&
-            element.year === yearAvg[i + 4].year
+            yearAvg[i + 3] !== undefined &&
+            element.year === yearAvg[i + 3].year
           ) {
             if (
+              yearAvg[i + 4] !== undefined &&
+              element.year === yearAvg[i + 4].year
+            ) {
+              if (
+                yearAndRate.rate <
+                (element.score +
+                  yearAvg[i + 1].score +
+                  yearAvg[i + 2].score +
+                  yearAvg[i + 3].score +
+                  yearAvg[i + 4].score) /
+                  5
+              ) {
+                yearAndRate.year = element.year;
+                yearAndRate.rate =
+                  (element.score +
+                    yearAvg[i + 1].score +
+                    yearAvg[i + 2].score +
+                    yearAvg[i + 3].score +
+                    yearAvg[i + 4].score) /
+                  5;
+              }
+            } else if (
               yearAndRate.rate <
               (element.score +
                 yearAvg[i + 1].score +
                 yearAvg[i + 2].score +
-                yearAvg[i + 3].score +
-                yearAvg[i + 4].score) /
-                5
+                yearAvg[i + 3].score) /
+                4
             ) {
               yearAndRate.year = element.year;
               yearAndRate.rate =
                 (element.score +
                   yearAvg[i + 1].score +
                   yearAvg[i + 2].score +
-                  yearAvg[i + 3].score +
-                  yearAvg[i + 4].score) /
-                5;
+                  yearAvg[i + 3].score) /
+                4;
             }
+          } else if (
+            yearAndRate.rate <
+            (element.score + yearAvg[i + 1].score + yearAvg[i + 2].score) / 3
+          ) {
+            yearAndRate.year = element.year;
+            yearAndRate.rate =
+              (element.score + yearAvg[i + 1].score + yearAvg[i + 2].score) / 3;
           }
+        } else if (
+          yearAndRate.rate <
+          (element.score + yearAvg[i + 1].score) / 2
+        ) {
+          yearAndRate.year = element.year;
+          yearAndRate.rate = (element.score + yearAvg[i + 1].score) / 2;
         }
+      } else if (yearAndRate.rate < element.score) {
+        yearAndRate.year = element.year;
+        yearAndRate.rate = element.score;
       }
     }
   });
@@ -191,5 +214,3 @@ function bestYearAvg(moviesArray) {
     yearAndRate.year
   } with an average score of ${+yearAndRate.rate.toFixed(2)}`;
 }
-
-console.log(bestYearAvg(movies));
